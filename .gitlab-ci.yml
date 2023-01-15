@@ -1,0 +1,7 @@
+# Docker images: https://s.georgar.de/builds/docker/avr_builder
+image: avr_builder:20230115
+
+build-all:
+  stage: build
+  script:
+    - linux/build_test.sh

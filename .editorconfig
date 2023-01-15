@@ -1,0 +1,18 @@
+root = true
+
+#  General settings
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# c settings
+[**.{c,h}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# Makefile settings
+[Makefile]
+indent_size = tab
