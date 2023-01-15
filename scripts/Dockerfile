@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 
 WORKDIR /toolchain
 
-COPY setupArmLibs.sh .
+COPY setupAvrLibs.sh .
 
 RUN apt-get update && \
     apt-get install -y make curl unzip && \
