@@ -16,3 +16,7 @@ max_line_length = 120
 # Makefile settings
 [Makefile]
 indent_size = tab
+
+# Markdown settings
+[*.md]
+trim_trailing_whitespace = false
