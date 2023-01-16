@@ -12,15 +12,16 @@ I'm uploading everything in case it helps someone else down the line.
 ## Table of Contents
 
 1. [Dependencies](#1-dependencies)
-2. [Build/Test script](#2-buildtest-script)  
-    2.1 [Examples](#21-examples)  
-    2.2 [QoL Tip](#22-qol-tip)
-3. [Using clangd](#3-using-clangd)  
-    3.1 [Dependencies](#31-dependencies)  
-    3.2 [Configuration](#32-configuration)  
-    3.3 [Updating project files](#33-updating-project-files)  
-4. [Docker/CI](#4-dockerci)
-5. [License](#5-license)
+2. [Manually building SPOS](#2-manually-building-spos)
+3. [Build/Test script](#3-buildtest-script)  
+    3.1 [Examples](#31-examples)  
+    3.2 [QoL Tip](#32-qol-tip)
+4. [Using clangd](#4-using-clangd)  
+    4.1 [Configuration](#41-configuration)  
+    4.2 [Updating project files](#42-updating-project-files)  
+5. [VSCode](#5-using-vscode)
+6. [Docker/CI](#6-dockerci)
+7. [License](#7-license)
 
 ## 1. Dependencies
 
@@ -39,7 +40,15 @@ $ sudo ./scripts/setupAvrLibs.sh
 
 Note that other scripts rely on everything being under `/opt/avr`, so you should not change the installation path.
 
-## 2. Build/Test script
+## 2. Manually building SPOS
+
+```bash
+$ cd /path/to/SPOS
+$ sed -e 's:avr-gcc:/opt/avr/gcc/bin/avr-gcc:g'         \
+      -e 's:\(CFLAGS =\):\1 -I"/opt/avr/dfp/include":g' \
+      Makefile | make -B -f -
+```
+## 3. Build/Test script
 
 The `scripts/build_test.sh` script can be used to build and test the project. It runs under Linux and Windows
 (via `git-bash`, which is preinstalled on the VMs and on the lab computers). It uses the following environment
@@ -77,8 +86,8 @@ PROJECT_ROOT
     │   │   ├── defines.h
     │   │   ├── ...
 ```
-When `PUB!=1`, the script expects the tests to be in `${SCRIPT_DIRECTORY}../SPOS/Tests/V$VERSUCH/`, e. g.
-`${SCRIPT_DIRECTORY}../SPOS/Tests/V4/3 Heap Cleanup`. The directory structure **with tests** would look
+When `PUB!=1`, the script expects the tests to be in `${SCRIPT_DIRECTORY}/../SPOS/Tests/V$VERSUCH/`, e. g.
+`${SCRIPT_DIRECTORY}/../SPOS/Tests/V4/3 Heap Cleanup`. The directory structure **with tests** would look
 as follows:
 
 ```js
@@ -107,7 +116,7 @@ PROJECT_ROOT
     │   │   ├── ...
 ```
 
-### 2.1 Examples
+### 3.1 Examples
 1. Make sure all tests compile successfully
 ```bash
 $ cd PROJECT_ROOT
@@ -120,23 +129,18 @@ $ cd PROJECT_ROOT
 $ WIN=1 PUB=1 STOP=1 ./scripts/build_test.sh
 ```
 
-### 2.2 QoL tip
+### 3.2 QoL tip
 The script doesn't care about the *current working directory*. You can run `git-bash` (from anywhere), write
 e.g. `WIN=1 PUB=1 STOP=1` and drag-and-drop the `build_test.sh` file into the terminal, then hit Return to
 run it. All that matters is that the directory structure explained above is present.
 
-## 3. Using clangd
+## 4. Using clangd
 
 To use clangd, you need to install the following dependencies and configure your editor (e.g. neovim) accordingly.
 This means installing a Language Server Protocol (LSP) client and configuring it to use clangd.
-For neovim, you can use [mason.nvim](https://github.com/williamboman/mason.nvim)
+For neovim, you can use [mason.nvim](https://github.com/williamboman/mason.nvim).
 
-### 3.1 Dependencies
-- clangd
-- clang-tools
-- clangd-cpp
-
-### 3.2 Configuration
+### 4.1 Configuration
 The easiest way to configure clangd after setting up your editor is by using
 [rizsotto/Bear](https://github.com/rizsotto/Bear) to generate a `compile_commands.json` file.
 You'll need to redo this every time you add new `*.{c,h}` files to the project.
@@ -146,8 +150,8 @@ $ cd PROJECT_ROOT
 $ bear -- make -f scripts/Makefile -B
 ```
 
-### 3.3 Updating project files
-clangd is not happy with some of the things we do. Specifically, it does not like `__naked__` and `PROGMEM`.
+### 4.2 Updating project files
+clangd is not happy with some of the things we do. Specifically, it does not like `__attribute__((naked))` and `PROGMEM`.
 
 To fix this, change the following files:
 
@@ -169,7 +173,27 @@ ISR(TIMER2_COMPA_vect) __attribute__((naked));
 #endif
 ```
 
-## 4. Docker/CI
+Note that you still need `avr-gcc` to compile SPOS. This is just to use LSP features, e.g. in neovim.
+
+## 5. Using VSCode
+
+To use VSCode you'll need a few more things.
+
+- [AVR Helper extension](https://marketplace.visualstudio.com/items?itemName=Alex079.vscode-avr-helper)
+- [C/C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
+- avrdude (consult your package manager)
+
+After installing both, type `^P` in VSCode and select "AVR Helper: Perform initial setup". Enter
+the following things during setup (assuming you used `setupAvrLibs.sh` before).
+
+- 1/4: `/opt/avr/gcc/bin/avr-gcc`
+- 2/4: `/usr/bin/avrdude` (may vary across distributions)
+- 3/4: Leave empty
+- 4/4: `/opt/avr/dfp/include`
+
+You should now be able to use IntelliSense.
+
+## 6. Docker/CI
 
 `scripts/build_test.sh` was written with GitLab CI in mind. It can be used to make sure the project compiles in a 
 Docker container. An example Dockerfile is provided with the project. You'll need to bring your own 
@@ -183,6 +207,6 @@ $ docker build -t avr_builder:latest .
 
 2. Update `.gitlab-ci.yml` to use your image.
 
-## 5. License
+## 7. License
 
 These files are (un)licensed under [The Unlicense](https://unlicense.org/). See [license](license) for more information.
