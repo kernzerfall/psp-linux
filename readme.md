@@ -183,7 +183,7 @@ To use VSCode you'll need a few more things.
 - [C/C++ Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools-extension-pack)
 - avrdude (consult your package manager)
 
-After installing both, type `^P` in VSCode and select "AVR Helper: Perform initial setup". Enter
+After installing everything, type `^P` in VSCode and select "AVR Helper: Perform initial setup". Enter
 the following things during setup (assuming you used `setupAvrLibs.sh` before).
 
 - 1/4: `/opt/avr/gcc/bin/avr-gcc`
