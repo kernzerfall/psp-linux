@@ -19,9 +19,9 @@ mkdir -p dfp /opt/avr
 unzip "$DFP_PACK" -d dfp
 tar xvzf "${AVR8_GCC}" -C "${LIBS_INSTALL_PATH}"
 
-mv      "${LIBS_INSTALL_PATH}/$(tar tf avr8_gcc.tar.gz | head -n 1)" \
+mv      "${LIBS_INSTALL_PATH}/$(tar tf ${AVR8_GCC} | head -n 1)" \
 	"${LIBS_INSTALL_PATH}/gcc"
 
 find ./dfp -print -type f -exec install -Dm 755 "{}" "${LIBS_INSTALL_PATH}/{}" \;
 
-rm -rf dfp 
+rm -rf dfp
