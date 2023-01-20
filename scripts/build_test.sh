@@ -106,11 +106,6 @@ for test in "${TESTS[@]}"; do
     make_spos
     if [[ $MAKE_RET -ne 0 ]]; then
         error "Test Failed: $test"
-
-        if [[ -f "${SPOS_ROOT}/SPOS/progs.c.bak" ]]; then
-            mv "${SPOS_ROOT}/SPOS/progs.c.bak" "${SPOS_ROOT}/SPOS/progs.c"
-        fi
-
         exit 1
     fi
 
