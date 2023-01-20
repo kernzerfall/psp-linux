@@ -57,7 +57,7 @@ variables:
 - `WIN`: Set to `1` if you are running on Windows. This is used to determine the path to the `avr-gcc` binaries.
 - `STOP`: Set to `1` if you want to stop the script after compiling each test (useful to flash the test to the device
     without waiting).
-- `PUB`: Set to `1` if you want pull the tests from a public network location (useful if you are on the lab computers).
+- `PUB`: Set to `1` if you want to pull the tests from a public network location (useful if you are on the lab computers).
     You can change the location inside the script (`WIN_PUB_TESTS`). The default is
 ```bash
 WIN_PUB_TESTS="/p/public/Versuch\ $VERSUCH/Testtasks"
