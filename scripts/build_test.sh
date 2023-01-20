@@ -35,7 +35,7 @@ make_spos(){
             Makefile | make -B -f -
         MAKE_RET=$?
     else
-        rm -f bin/{release,debug}/progs.{o,h}
+        rm -f bin/{release,debug}/progs.{o,d}
         # Make some substitutions
         # 1. GCC bins are not in PATH by default
         # 2. Add GCC Include Path to CFLAGS
