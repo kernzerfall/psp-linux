@@ -84,9 +84,6 @@ if [[ "${#TESTS[@]}" -eq 0 ]]; then
     exit 1
 fi
 
-
-pushd "${SCRIPT_DIR}/.."
-
 if [[ -f "${SPOS_ROOT}/SPOS/progs.c" ]]; then
     cp "${SPOS_ROOT}/SPOS/progs.c" "${SPOS_ROOT}/SPOS/progs.c.bak"
 fi
